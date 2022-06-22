@@ -1,0 +1,77 @@
+.header-container {
+  background-color: #413F3F;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.main-container {
+  height: 100%;
+  padding: 40px 32px 52px;
+}
+
+.folder {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.folder-info {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.folder-title {
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+.divider-horizontal {
+  background-color: #BCBCC3;
+  opacity: 40%;
+  width: 100%;
+  margin: 0 13px;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+}
+
+.folder-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.item-fields {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.icon {
+  cursor: pointer;
+}
+
+.ReactCollapse--collapse {
+  transition: height 500ms;
+}
+
+.add-item-input,
+.add-folder-input {
+  display: flex;
+}
+
+.add-item-input input,
+.add-folder-input input {
+  margin: 0 10px;
+}
+
+.trash-icon {
+  margin-left: 10px;
+}
