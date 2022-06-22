@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Collapse } from 'react-collapse';
 import './App.css';
 import { testData } from './constants/list';
@@ -15,6 +15,10 @@ const App = () => {
     checked: false,
   });
   const [addFolder, setAddFolder] = useState('');
+
+  useEffect(() => {
+    console.log(items);
+  }, [items]);
 
   const handleOnArrowClick = (folderIndex: number) => {
     const newFolder = items[folderIndex];
@@ -45,21 +49,14 @@ const App = () => {
     setItems([...newItems]);
   };
 
-  const handleOnAddItemButtonClick = (folderIndex: number) => {
+  const handleOnAddItemButtonClick = useCallback((folderIndex: number) => {
     if (!addItem.title || !addItem.description || !addItem.author) {
       return;
     }
     const newItems = [...items];
     newItems[folderIndex].items.push(addItem);
-    clearAddItem();
-    setItems([...newItems]);
-  };
-
-  const clearAddItem = () => {
-    addItem.title = '';
-    addItem.description = '';
-    addItem.author = '';
-  };
+    setItems(newItems);
+  }, [addItem, setItems, items]);
 
   const handleOnAddFolderButtonClick = () => {
     const newFolder = {
@@ -75,7 +72,6 @@ const App = () => {
   };
 
   const handleOnItemDeleteClick = (folderIndex: number, index: number) => {
-    console.log(folderIndex, index);
     const newItems = [...items];
     newItems[folderIndex].items.splice(index, 1);
     setItems([...newItems]);
@@ -109,19 +105,19 @@ const App = () => {
                   onClick={() => handleOnArrowClick(folderIndex)}
                 />
                 <img
-                alt="trash icon"
-                className="trash-icon icon"
-                src={trashImg}
-                width="16px"
-                height="16px"
-                onClick={() => handleOnFolderDeleteClick(folderIndex)}
+                  alt="trash icon"
+                  className="trash-icon icon"
+                  src={trashImg}
+                  width="16px"
+                  height="16px"
+                  onClick={() => handleOnFolderDeleteClick(folderIndex)}
                 />
               </div>
               <Collapse isOpened={el.isOpened}>
                 <div className="items">
                   {el.items.map((item, index) => {
                     return (
-                      <div key={item.title} className="folder-item">
+                      <div key={item.title} className={`${item.checked ? 'folder-item crossed' : 'folder-item'}`}>
                         <input
                           type="checkbox"
                           checked={item.checked}
@@ -132,12 +128,12 @@ const App = () => {
                           <span className="item-author">{item.author}</span>
                         </div>
                         <img
-                        alt="trash icon"
-                        className="trash-icon icon"
-                        src={trashImg}
-                        width="16px"
-                        height="16px"
-                        onClick={() => handleOnItemDeleteClick(folderIndex, index)}
+                          alt="trash icon"
+                          className="trash-icon icon"
+                          src={trashImg}
+                          width="16px"
+                          height="16px"
+                          onClick={() => handleOnItemDeleteClick(folderIndex, index)}
                         />
                       </div>
                     );
@@ -159,7 +155,9 @@ const App = () => {
         <div className="add-folder-input">
           <label htmlFor="add-folder">Folder Name:</label>
           <input name="add-folder" type="text" placeholder="Write a folder name" value={addFolder} onChange={(e) => setAddFolder(e.target.value)} />
-          <button onClick={() => handleOnAddFolderButtonClick()} type="button">Add Folder</button>
+          <button onClick={() => {
+            handleOnAddFolderButtonClick();
+          }} type="button">Add Folder</button>
         </div>
       </main>
     </div>

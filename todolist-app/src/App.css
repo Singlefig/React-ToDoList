@@ -75,3 +75,8 @@
 .trash-icon {
   margin-left: 10px;
 }
+
+.crossed {
+  text-decoration: line-through;
+  color: #B5B5BA;
+}
