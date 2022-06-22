@@ -61,7 +61,7 @@ const App = () => {
     addItem.author = '';
   };
 
-  const handleOnAddFolderButtonClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleOnAddFolderButtonClick = () => {
     const newFolder = {
       folder: addFolder,
       items: [],
@@ -72,6 +72,19 @@ const App = () => {
     newItems.push(newFolder);
     setItems([...newItems]);
     setAddFolder('');
+  };
+
+  const handleOnItemDeleteClick = (folderIndex: number, index: number) => {
+    console.log(folderIndex, index);
+    const newItems = [...items];
+    newItems[folderIndex].items.splice(index, 1);
+    setItems([...newItems]);
+  };
+
+  const handleOnFolderDeleteClick = (folderIndex: number) => {
+    let newItems = [...items];
+    newItems.splice(folderIndex, 1);
+    setItems([...newItems]);
   };
 
   return (
@@ -95,7 +108,14 @@ const App = () => {
                   className="icon"
                   onClick={() => handleOnArrowClick(folderIndex)}
                 />
-                <img alt="trash icon" className="trash-icon icon" src={trashImg} width="16px" height="16px" />
+                <img
+                alt="trash icon"
+                className="trash-icon icon"
+                src={trashImg}
+                width="16px"
+                height="16px"
+                onClick={() => handleOnFolderDeleteClick(folderIndex)}
+                />
               </div>
               <Collapse isOpened={el.isOpened}>
                 <div className="items">
@@ -111,7 +131,14 @@ const App = () => {
                           <span className="item-description">{item.description}</span>
                           <span className="item-author">{item.author}</span>
                         </div>
-                        <img alt="trash icon" className="trash-icon icon" src={trashImg} width="16px" height="16px" />
+                        <img
+                        alt="trash icon"
+                        className="trash-icon icon"
+                        src={trashImg}
+                        width="16px"
+                        height="16px"
+                        onClick={() => handleOnItemDeleteClick(folderIndex, index)}
+                        />
                       </div>
                     );
                   })}
@@ -132,7 +159,7 @@ const App = () => {
         <div className="add-folder-input">
           <label htmlFor="add-folder">Folder Name:</label>
           <input name="add-folder" type="text" placeholder="Write a folder name" value={addFolder} onChange={(e) => setAddFolder(e.target.value)} />
-          <button onClick={(e) => handleOnAddFolderButtonClick(e)} type="button">Add Folder</button>
+          <button onClick={() => handleOnAddFolderButtonClick()} type="button">Add Folder</button>
         </div>
       </main>
     </div>
