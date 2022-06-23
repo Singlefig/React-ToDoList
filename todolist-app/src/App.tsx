@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Collapse } from 'react-collapse';
 import './App.css';
 import { testData } from './constants/list';
@@ -16,9 +16,6 @@ const App = () => {
   });
   const [addFolder, setAddFolder] = useState('');
 
-  useEffect(() => {
-    console.log(items);
-  }, [items]);
 
   const handleOnArrowClick = (folderIndex: number) => {
     const newFolder = items[folderIndex];
