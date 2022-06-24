@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Collapse } from 'react-collapse';
 import './App.css';
 import { testData } from './constants/list';
@@ -15,6 +15,8 @@ const App = () => {
     checked: false,
   });
   const [addFolder, setAddFolder] = useState('');
+  const [isAddItemBtnDisabled, setIsAddItemBtnDisabled] = useState(true);
+  const [isAddFolderBtnDisabled, setIsAddFolderBtnDisabled] = useState(true);
 
 
   const handleOnArrowClick = (folderIndex: number) => {
@@ -80,6 +82,22 @@ const App = () => {
     setItems([...newItems]);
   };
 
+  useEffect(() => {
+    if (addItem.title && addItem.description && addItem.author) {
+      setIsAddItemBtnDisabled(false);
+    } else {
+      setIsAddItemBtnDisabled(true);
+    }
+  }, [addItem, setIsAddItemBtnDisabled]);
+
+  useEffect(() => {
+    if (addFolder) {
+      setIsAddFolderBtnDisabled(false);
+    } else {
+      setIsAddFolderBtnDisabled(true);
+    }
+  }, [addFolder, setIsAddFolderBtnDisabled]);
+
   return (
     <div className="App">
       <header className="header-container">
@@ -88,7 +106,7 @@ const App = () => {
       <main className="main-container">
         {items.map((el, folderIndex) => {
           return (
-            <div key={el.folder} className="folder">
+            <div key={el.folder + folderIndex} className="folder">
               <div className="folder-info">
                 <img alt="folder icon" src={folderImg} width="24px" height="24px" />
                 <p className="folder-title">{el.folder}</p>
@@ -109,12 +127,20 @@ const App = () => {
                   height="16px"
                   onClick={() => handleOnFolderDeleteClick(folderIndex)}
                 />
+                <div className="items-count">
+                  <p>{el.items.length}</p>
+                </div>
               </div>
               <Collapse isOpened={el.isOpened}>
                 <div className="items">
+                  <div className='folder-item header-row'>
+                    <p className="item-title">Title</p>
+                    <span className="item-description">Description</span>
+                    <span className="item-author">Author</span>
+                  </div>
                   {el.items.map((item, index) => {
                     return (
-                      <div key={item.title} className={`${item.checked ? 'folder-item crossed' : 'folder-item'}`}>
+                      <div key={item.title + index} className={`${item.checked ? 'folder-item crossed' : 'folder-item'}`}>
                         <input
                           type="checkbox"
                           checked={item.checked}
@@ -136,13 +162,20 @@ const App = () => {
                     );
                   })}
                   <div className="add-item-input">
-                    <label htmlFor="add-title">Title:</label>
+                    <label htmlFor="add-title">Title *:</label>
                     <input name="add-title" type="text" placeholder="Title" value={addItem.title} onChange={(e) => setAddItem({ ...addItem, title: e.target.value })} />
-                    <label htmlFor="add-description">Description:</label>
+                    <label htmlFor="add-description">Description *:</label>
                     <input name="add-description" type="text" placeholder="Description" value={addItem.description} onChange={(e) => setAddItem({ ...addItem, description: e.target.value })} />
-                    <label htmlFor="add-author">Author:</label>
+                    <label htmlFor="add-author">Author *:</label>
                     <input name="add-author" type="text" placeholder="Author" value={addItem.author} onChange={(e) => setAddItem({ ...addItem, author: e.target.value })} />
-                    <button onClick={() => handleOnAddItemButtonClick(folderIndex)} type="button">Add Task</button>
+                    <button
+                      disabled={isAddItemBtnDisabled}
+                      onClick={() => handleOnAddItemButtonClick(folderIndex)}
+                      type="button"
+                      className="add-btn"
+                    >
+                      Add Task
+                    </button>
                   </div>
                 </div>
               </Collapse>
@@ -152,9 +185,16 @@ const App = () => {
         <div className="add-folder-input">
           <label htmlFor="add-folder">Folder Name:</label>
           <input name="add-folder" type="text" placeholder="Write a folder name" value={addFolder} onChange={(e) => setAddFolder(e.target.value)} />
-          <button onClick={() => {
-            handleOnAddFolderButtonClick();
-          }} type="button">Add Folder</button>
+          <button
+            onClick={() => {
+              handleOnAddFolderButtonClick();
+            }}
+            type="button"
+            className="add-btn"
+            disabled={isAddFolderBtnDisabled}
+          >
+            Add Folder
+          </button>
         </div>
       </main>
     </div>
